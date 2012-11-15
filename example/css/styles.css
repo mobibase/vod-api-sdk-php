@@ -1,0 +1,129 @@
+body {
+    font: 12px Arial, sans-serif;
+    margin: 30px auto;
+    padding: 10px;
+    width: 800px;
+    color: white;
+    background: #252525;
+}
+a {
+    color: deepskyblue;
+    text-decoration: none;
+} 
+img {
+    border: 1px solid white;
+}
+h1 {
+    font: 100 60px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    margin: 10px 0;
+}
+h2 {
+    font: 100 40px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    margin: 0;
+}
+    h2 span {
+        font-size: 50%;
+        color: deepskyblue;
+    }
+h3 {
+    font: 100 20px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    margin: 10px 0;
+}
+
+#packages {
+    margin: 20px 0;
+    padding: 0;
+    list-style: none;
+}
+    #packages li {
+        padding: 20px;
+    }
+        #packages li:nth-child(odd) {
+            background: black;
+        }
+    #packages img {
+        width: 120px;
+        height: 70px;
+        float: left;
+        margin-right: 30px;
+        background: white;
+    }
+
+#videos {
+    margin: 20px 0;
+    padding: 0;
+    list-style: none;
+    overflow: hidden;
+}
+    #videos li {
+        width: 400px;
+        float: left;
+        height: 300px;
+    }
+    #videos img {
+        height: 200px;
+        display: block;
+    }
+
+#video {
+    margin: 20px 0;
+}
+
+#pagination {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow:hidden;
+}
+    #pagination li {
+        float: left;
+        padding: 5px 10px;
+        margin: 1px;
+        border: 1px solid deepskyblue;
+    }
+        #pagination li.current {
+            border: 1px solid white;
+        }
+
+#compatibility div { 
+    padding: 30px;
+    text-align: center;
+    color: white;
+    font-size: 160%;
+}
+    #compatibility .compatible {
+        background: green;
+    }
+    #compatibility .player-required {
+        background: orange;
+    }
+    #compatibility .unkown,
+    #compatibility .not-compatible {
+        background: red;
+    }
+
+#error {
+    background: red;
+    padding: 30px;
+    text-align: center;
+    color: black;
+    font-size: 160%;
+}
+
+#trace {
+    margin-top: 20px;
+    border-top: 1px dotted gray;
+    padding: 10px 0;
+    width: 100%;
+    overflow: auto;
+}
+    #trace div {
+        display: none;
+    }
+    #trace h4 {
+        color: gray;
+    }
+    #trace pre {
+
+        color: gray;
+    }
