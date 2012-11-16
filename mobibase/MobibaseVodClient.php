@@ -115,7 +115,7 @@
             $response = $this->curl($request);
 
             $this->last_request  = $request;
-            $this->last_response = $response;
+            $this->last_response = json_decode($response);
 
             if (!$response) {
                 throw new MobibaseVodExecption(__METHOD__.': Bad URL or Server unavailable.');   
