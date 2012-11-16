@@ -2,9 +2,9 @@
 
 ## Getting started
 
-Include the client.
+Include the client class.
 
-    include "mobibase/VodClient.php";
+    include "mobibase/MobibaseVodClient.php";
 
 Instanciate the client class with your Mobibase VOD API key.
 

@@ -1,6 +1,6 @@
 <?php
     include_once "settings.php";
-    include_once "../mobibase/VodClient.php";
+    include_once "../mobibase/MobibaseVodClient.php";
 
     $page = isset($_GET['page']) ? $_GET['page'] : 1;
 
