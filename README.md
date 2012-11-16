@@ -1,4 +1,4 @@
-# Mobibase’s VOD Service PHP wrapper V1
+# Mobibase VOD Service PHP wrapper V1
 
 ## Getting started
 
