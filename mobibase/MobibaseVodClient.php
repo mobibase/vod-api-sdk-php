@@ -60,16 +60,12 @@
         public function getVideo($id, $network = null, $ua = null) {
             if ($network) {
                 $network = '/'.strtolower($network);
-            }
             
-            if ($ua) {
-                $ua = '/'.base64_encode($ua);
-            } else if ($this->ua) {
-                $ua = '/'.base64_encode($this->ua);
-            }
-
-            if (($network && !$ua) || (!$network && $ua)) {
-                throw new MobibaseVodExecption(__METHOD__.': Both Network and User Agent are required.');  
+                if ($ua) {
+                    $ua = '/'.base64_encode($ua);
+                } else if ($this->ua) {
+                    $ua = '/'.base64_encode($this->ua);
+                }
             }
 
             return $this->service('videos/'.$id.$network.$ua);
