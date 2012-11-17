@@ -1,6 +1,8 @@
-# Mobibase VOD Service PHP wrapper V1
+Mobibase VOD Service PHP wrapper V1
+===================================
 
-## Getting started
+Getting started
+---------------
 
 Include the client class.
 
@@ -10,13 +12,22 @@ Instanciate the client class with your Mobibase VOD API key.
 
     $client = new MobibaseVodClient($apikey);
 
-## Methods
+Methods
+-------
 
 ### getPackages()
 
 Returns the list of all available packages in the service defined by the API key.
 
     $service = $client->getPackages();
+
+#### Example
+
+    $client = new MobibaseVodClient($apikey);
+
+    $service = $client->getPackages();
+
+    $packages = $service->response->packages; // array of package objects
 
 ### getPackages( [ {OPTIONS} ] )
 
@@ -36,11 +47,27 @@ Offset parameters can be passed as options.
 
 **Note:** page/perpage and limit/offset can't be used in the same request.
 
+#### Example
+
+    $client = new MobibaseVodClient($apikey);
+
+    $service = $client->getPackages(array('limit' => 5));
+
+    $packages = $service->response->packages; // array of 5 package objects
+
 ### getPackage( {PACKAGE_ID} )
 
 Returns a specific package information and the list of videos attached.
 
     $service = $client->getPackage({PACKAGE_ID});
+
+#### Example
+
+    $client = new MobibaseVodClient($apikey);
+
+    $service = $client->getPackage($id);
+
+    $package = $service->response->package; // package object
 
 ### getPackage( {PACKAGE_ID} [, {OPTIONS} ] )
 
@@ -60,11 +87,27 @@ Offset parameters can be passed as options.
 
 **Note:** page/perpage and limit/offset can't be used in the same request.
 
+#### Example
+
+    $client = new MobibaseVodClient($apikey);
+
+    $service = $client->getPackage($id, array('limit' => 5));
+
+    $package = $service->response->package; // package object with 5 videos
+
 ### getVideos()
 
 Returns the list of all available videos in the service defined by the API key.
 
     $service = $client->getVideos();
+
+#### Example
+
+    $client = new MobibaseVodClient($apikey);
+
+    $service = $client->getVideos();
+
+    $videos = $service->response->videos; // array of video objects
 
 ### getVideos( [ {OPTIONS} ] )
 
@@ -84,6 +127,14 @@ Offset parameters can be passed as options.
 
 **Note:** page/perpage and limit/offset can't be used in the same request.
 
+#### Example
+
+    $client = new MobibaseVodClient($apikey);
+
+    $service = $client->getVideos(array('limit' => 5));
+
+    $videos = $service->response->videos; // array of 5 video objects
+
 ### getVideo( {VIDEO_ID} [, {NETWORK} ] )
 
 Returns a specific video information. 
@@ -94,7 +145,24 @@ If a Network (EDGE, UMTS, HSDPA, WIFI) is defined, the response returns the righ
 
 Or to get the streaming URL.
 
-    $service = $client->getVideo($id, $network, $_SERVER['HTTP_USER_AGENT']);
+    $service = $client->getVideo($id, $network);
+
+#### Examples
+
+    $client = new MobibaseVodClient($apikey);
+
+    $service = $client->geVideo($id);
+
+    $video = $service->response->video; // video object
+
+Request with a network defined to get a stream URL for the current device.
+
+    $client = new MobibaseVodClient($apikey);
+
+    $service = $client->geVideo($id, 'wifi');
+
+    $video = $service->response->video; // video object
+    $sream = $service->response->sream; // stream object
 
 ### setUserAgent( {USER_AGENT} )
 
@@ -111,19 +179,33 @@ Another User Agent can be given to check compatibility of a different device.
 
     $service = $client->isDeviceCompatible($_SERVER['HTTP_USER_AGENT']);
 
-## Full example
+### getLastRequest()
 
-Best practice.
+Returns the last request sent to the service.
 
-    include "VodClient.php";
+    $request = $client->getLastRequest();
 
-    $client = new MobibaseVodClient($apikey);
+### getLastResponse()
 
-    $service = $client->getVideos();
+Return the last response sent by the service.
 
-    if ($service->status == 'OK') {
-        $videos = $service->response->videos;
-    } else {
-        die($service->response->error->message);
+    $response = $client->getLastResponse();
+
+Full example
+------------
+
+Best practice for error management.
+
+    try {
+        $client = new MobibaseVodClient($apikey);
+
+        $service = $client->getVideos();
+
+        if ($service->status == 'OK') {
+            $videos = $service->response->videos;
+        } else {
+            die($service->response->error->message);
+        }
+    } catch(Exception $e) {
+        die($e->getMessage());
     }
-
