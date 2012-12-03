@@ -10,7 +10,7 @@ Include the client class.
 
 Instanciate the client class with your Mobibase VOD API key.
 
-    $client = new MobibaseVodClient($apikey);
+    $client = new MobibaseVodClient($api_key);
 
 Methods
 -------
@@ -23,13 +23,30 @@ Returns the list of all available packages in the service defined by the API key
 
 #### Example
 
-    $client = new MobibaseVodClient($apikey);
+    $client = new MobibaseVodClient($api_key);
 
     $service = $client->getPackages();
 
     $packages = $service->response->packages; // array of package objects
 
 ### getPackages( [ {OPTIONS} ] )
+
+Order parameters can be passed as options.
+
+    $service = $client->getPackages(array(
+        'orderby'  => 'name:asc',
+    ));
+
+Order can be set on:
+
+- id
+- name
+- content (number on content)
+
+The sorting direction is apply after the field name.
+
+- :asc
+- :desc
 
 Pagination parameters can be passed as options.
 
@@ -49,7 +66,7 @@ Offset parameters can be passed as options.
 
 #### Example
 
-    $client = new MobibaseVodClient($apikey);
+    $client = new MobibaseVodClient($api_key);
 
     $service = $client->getPackages(array('limit' => 5));
 
@@ -59,13 +76,13 @@ Offset parameters can be passed as options.
 
 Returns a specific package information and the list of videos attached.
 
-    $service = $client->getPackage({PACKAGE_ID});
+    $service = $client->getPackage($package_id);
 
 #### Example
 
-    $client = new MobibaseVodClient($apikey);
+    $client = new MobibaseVodClient($api_key);
 
-    $service = $client->getPackage($id);
+    $service = $client->getPackage($package_id);
 
     $package = $service->response->package; // package object
 
@@ -73,14 +90,14 @@ Returns a specific package information and the list of videos attached.
 
 Pagination parameters can be passed as options.
 
-    $service = $client->getPackage($id, array(
+    $service = $client->getPackage($package_id, array(
         'page'    => 2,
         'perpage' => 5
     ));
 
 Offset parameters can be passed as options.
 
-    $service = $client->getPackage($id, array(
+    $service = $client->getPackage($package_id, array(
         'limit'    => 5,
         'offset'   => 5
     ));
@@ -89,9 +106,9 @@ Offset parameters can be passed as options.
 
 #### Example
 
-    $client = new MobibaseVodClient($apikey);
+    $client = new MobibaseVodClient($api_key);
 
-    $service = $client->getPackage($id, array('limit' => 5));
+    $service = $client->getPackage($package_id, array('limit' => 5));
 
     $package = $service->response->package; // package object with 5 videos
 
@@ -103,13 +120,44 @@ Returns the list of all available videos in the service defined by the API key.
 
 #### Example
 
-    $client = new MobibaseVodClient($apikey);
+    $client = new MobibaseVodClient($api_key);
 
     $service = $client->getVideos();
 
     $videos = $service->response->videos; // array of video objects
 
 ### getVideos( [ {OPTIONS} ] )
+
+Order parameters can be passed as options.
+
+    $service = $client->getVideos(array(
+        'orderby'  => 'name:asc',
+    ));
+
+Order can be set on:
+
+- id
+- name
+- duration
+- package.id
+- package.date
+
+The sorting direction is apply after the field name.
+
+- :asc
+- :desc
+
+Some extra parameters are allowed for videos, a periodical ramdon order can be set.
+
+- random (every call)
+- hourly
+- daily
+- monthly
+- yearly
+
+    $service = $client->getVideos(array(
+        'orderby'  => 'monthly:asc',
+    ));
 
 Pagination parameters can be passed as options.
 
@@ -129,7 +177,7 @@ Offset parameters can be passed as options.
 
 #### Example
 
-    $client = new MobibaseVodClient($apikey);
+    $client = new MobibaseVodClient($api_key);
 
     $service = $client->getVideos(array('limit' => 5));
 
@@ -141,25 +189,25 @@ Returns a specific video information.
 
 If a Network (EDGE, UMTS, HSDPA, WIFI) is defined, the response returns the right streaming URL for the device.
 
-    $service = $client->getVideo($id);
+    $service = $client->getVideo($video_id);
 
 Or to get the streaming URL.
 
-    $service = $client->getVideo($id, $network);
+    $service = $client->getVideo($video_id, $network);
 
 #### Examples
 
-    $client = new MobibaseVodClient($apikey);
+    $client = new MobibaseVodClient($api_key);
 
-    $service = $client->geVideo($id);
+    $service = $client->geVideo($video_id);
 
     $video = $service->response->video; // video object
 
 Request with a network defined to get a stream URL for the current device.
 
-    $client = new MobibaseVodClient($apikey);
+    $client = new MobibaseVodClient($api_key);
 
-    $service = $client->geVideo($id, 'wifi');
+    $service = $client->geVideo($video_id, 'wifi');
 
     $video = $service->response->video; // video object
     $sream = $service->response->sream; // stream object
@@ -197,7 +245,7 @@ Full example
 Best practice for error management.
 
     try {
-        $client = new MobibaseVodClient($apikey);
+        $client = new MobibaseVodClient($api_key);
 
         $service = $client->getVideos();
 

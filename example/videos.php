@@ -8,7 +8,8 @@
         $client = new MobibaseVodClient($settings['apikey']);
         $service = $client->getVideos(array(
             'page'    => $page,
-            'perpage' => $settings['perpage']
+            'perpage' => $settings['perpage'],
+            'orderby' => 'hourly'
         ));
 
         if ($service->status == 'OK') {
