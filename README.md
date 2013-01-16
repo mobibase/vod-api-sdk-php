@@ -149,15 +149,15 @@ The sorting direction is apply after the field name.
 
 Some extra parameters are allowed for videos, a periodical ramdon order can be set.
 
+    $service = $client->getVideos(array(
+        'orderby'  => 'monthly:asc',
+    ));
+
 - random (every call)
 - hourly
 - daily
 - monthly
 - yearly
-
-    $service = $client->getVideos(array(
-        'orderby'  => 'monthly:asc',
-    ));
 
 Pagination parameters can be passed as options.
 
