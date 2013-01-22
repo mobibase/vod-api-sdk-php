@@ -1,6 +1,6 @@
 <?php
     /*
-     * Copyright 2012 Mobibase.
+     * Copyright 2013 Mobibase.
      *
      * http://www.mobibase.com
      *
