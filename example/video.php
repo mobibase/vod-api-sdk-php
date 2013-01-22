@@ -9,9 +9,11 @@
     }
 
     try {
+        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+
         $client = new MobibaseVodClient($settings['apikey']);
 
-        $service = $client->getVideo($id, 'WIFI');
+        $service = $client->getVideo($id, 'WIFI', $user_agent);
 
         if ($service->status == 'OK') {
             $video  = $service->response->video;

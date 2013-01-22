@@ -3,9 +3,11 @@
     include_once "../mobibase/MobibaseVodClient.php";
 
     try {
+        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+
         $client = new MobibaseVodClient($settings['apikey']);
 
-        $service = $client->isDeviceCompatible();
+        $service = $client->isDeviceCompatible($user_agent);
 
         if ($service->status == 'OK') {
             $device = $service->response->device;
