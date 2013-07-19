@@ -1,6 +1,6 @@
 <?php
-    include_once "settings.php";
-    include_once "../mobibase/MobibaseVodClient.php";
+    include_once "../settings.php";
+    include_once "../../mobibase/MobibaseVodClient.php";
 
     try {
         $user_agent = $_SERVER['HTTP_USER_AGENT'];

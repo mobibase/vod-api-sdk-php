@@ -19,8 +19,9 @@
 
     Class MobibaseVodClient {
         private $api_key = null;
-        private $service_url = 'http://v1.vod.api.mobibase.com/';
+        private $service_url = 'http://v2.vod.api.mobibase.com/';
         private $last_request = null;
+        private $last_posted_data = null;
         private $last_response = null;
         private $ua = null;
 
@@ -50,25 +51,58 @@
         }
 
         public function getPackage($id, $options = array()) {
-            return $this->service('packages/'.$id, $options);
+            return $this->service('packages/' . $id, $options);
         }
 
         public function getVideos($options = array()) {
             return $this->service('videos/', $options);
         }
 
-        public function getVideo($id, $network = null, $ua = null) {
+        public function getVideo($id, $ticket = null, $network = null, $ua = null) {
+            if ($ticket) {
+                $params['ticket'] = $ticket;
+            } else {
+                $params = array();
+            }
+
             if ($network) {
-                $network = '/'.strtolower($network);
+                $network = '/' . strtolower($network);
             
                 if ($ua) {
-                    $ua = '/'.base64_encode($ua);
+                    $ua = '/' . base64_encode($ua);
                 } else if ($this->ua) {
-                    $ua = '/'.base64_encode($this->ua);
+                    $ua = '/' . base64_encode($this->ua);
                 }
             }
 
-            return $this->service('videos/'.$id.$network.$ua);
+            return $this->service('videos/' . $id . $network . $ua, $params);
+        }
+
+        public function createTicket($profile_id, $tracking_id = null) {
+            $posted = array(
+                'profile_id'  => $profile_id,
+                'tracking_id' => $tracking_id
+            );
+            return $this->service('tickets/create/', null, $posted);
+        }
+
+        public function invalidateTicket($ticket) {
+            $posted = array(
+                'ticket' => $ticket
+            );
+            return $this->service('tickets/invalidate/', null, $posted);
+        }
+
+        public function isTicketValid($ticket) {
+            return $this->service('tickets/validity/' . $ticket);
+        }
+
+        public function getTicketProfiles() {
+            return $this->service('tickets/profiles/');
+        }
+
+        public function getTicketProfile($id) {
+            return $this->service('tickets/profiles/' . $id);
         }
 
         public function isDeviceCompatible($ua = null) {
@@ -79,10 +113,10 @@
             }
 
             if (!$ua) {
-                throw new MobibaseVodExecption(__METHOD__.': User Agent is required.');  
+                throw new MobibaseVodExecption(__METHOD__ . ': User Agent is required.');  
             }
 
-            return $this->service('devices/compatibility/'.$ua);
+            return $this->service('devices/compatibility/' . $ua);
         }
 
         public function setApiKey($api_key) {
@@ -101,39 +135,50 @@
             return $this->last_response;
         }
 
-        private function service($action, $params = array()) {
+        public function getLastPostedData() {
+            return $this->last_posted_data;
+        }
+
+        private function service($action, $params = array(), $posted = array()) {
             $default = array(
                 'apikey' => $this->api_key,
             );
-            $params = array_merge($default, $params);
+            $params = array_merge($default, (array) $params);
 
-            $request  = $this->service_url.$action.'?'.http_build_query($params);
-            $response = $this->curl($request);
+            $request  = $this->service_url . $action . '?' . http_build_query($params);
+            $response = $this->curl($request, $posted);
 
-            $this->last_request  = $request;
-            $this->last_response = json_decode($response);
+            $this->last_request     = $request;
+            $this->last_posted_data = $posted;
+            $this->last_response    = json_decode($response);
 
             if (!$response) {
-                throw new MobibaseVodExecption(__METHOD__.': Bad URL or Server unavailable.');   
+                throw new MobibaseVodExecption(__METHOD__ . ': Bad URL or Server unavailable.');   
             }
 
             return json_decode($response);
         }
 
-        private function curl($url) {
+        private function curl($url, $posted = array()) {
             if (function_exists('curl_init')) {
                 $ch = curl_init(); 
                 
                 curl_setopt($ch, CURLOPT_URL, $url); 
                 curl_setopt($ch, CURLOPT_HEADER, 0); 
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+
+                if ($posted) {
+                    curl_setopt($ch,CURLOPT_POST, count($posted));
+                    curl_setopt($ch,CURLOPT_POSTFIELDS, http_build_query($posted));
+                }
+
                 $content = curl_exec($ch); 
 
                 curl_close($ch); 
 
                 return $content;
             } else {
-                throw new MobibaseVodExecption(__METHOD__.': Curl library must be installed.');
+                throw new MobibaseVodExecption(__METHOD__ . ': Curl library must be installed.');
             }
         }
     }

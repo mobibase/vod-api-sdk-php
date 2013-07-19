@@ -1,4 +1,4 @@
-Mobibase VOD Service PHP wrapper V1
+Mobibase VOD Service PHP wrapper V2
 ===================================
 
 Getting started
@@ -15,11 +15,34 @@ Instanciate the client class with your Mobibase VOD API key.
 Methods
 -------
 
+### isDeviceCompatible( [ USER_AGENT ] )
+
+Returns information about the streaming compatibility of a device.
+
+By defaut the SDK runs the compatibility check with the current device, excepted if another one has been set by setUserAgent(). 
+Another User Agent can be given to check compatibility of a different device.
+
+    $client->isDeviceCompatible($_SERVER['HTTP_USER_AGENT']);
+
+#### Examples
+
+    $client = new MobibaseVodClient($api_key);
+
+    $service = $client->isDeviceCompatible($_SERVER['HTTP_USER_AGENT']);
+
+    $device = $service->response->device; // device object
+    
+    if ($device->compatible) {
+        echo "This device is streaming compatible.";
+    } else {
+        echo "This device is NOT streaming compatible.";
+    }
+
 ### getPackages()
 
 Returns the list of all available packages in the service defined by the API key.
 
-    $service = $client->getPackages();
+    $client->getPackages();
 
 #### Example
 
@@ -76,7 +99,7 @@ Offset parameters can be passed as options.
 
 Returns a specific package information and the list of videos attached.
 
-    $service = $client->getPackage($package_id);
+    $client->getPackage($package_id);
 
 #### Example
 
@@ -116,7 +139,7 @@ Offset parameters can be passed as options.
 
 Returns the list of all available videos in the service defined by the API key.
 
-    $service = $client->getVideos();
+    $client->getVideos();
 
 #### Example
 
@@ -149,15 +172,15 @@ The sorting direction is apply after the field name.
 
 Some extra parameters are allowed for videos, a periodical ramdon order can be set.
 
-    $service = $client->getVideos(array(
-        'orderby'  => 'monthly:asc',
-    ));
-
 - random (every call)
 - hourly
 - daily
 - monthly
 - yearly
+
+    $service = $client->getVideos(array(
+        'orderby'  => 'monthly:asc',
+    ));
 
 Pagination parameters can be passed as options.
 
@@ -183,23 +206,23 @@ Offset parameters can be passed as options.
 
     $videos = $service->response->videos; // array of 5 video objects
 
-### getVideo( {VIDEO_ID} [, {NETWORK} ] )
+### getVideo( {VIDEO_ID} [, {TICKET}, {NETWORK} [, {USER_AGENT} ]] )
 
 Returns a specific video information. 
 
-If a Network (EDGE, UMTS, HSDPA, WIFI) is defined, the response returns the right streaming URL for the device.
+If a valid user Ticket and a Network (EDGE, UMTS, HSDPA, WIFI) are defined, the response returns the right streaming URL for the device.
 
-    $service = $client->getVideo($video_id);
+    $client->getVideo($video_id);
 
 Or to get the streaming URL.
 
-    $service = $client->getVideo($video_id, $network);
+    $client->getVideo($video_id, $ticket, $network);
 
 #### Examples
 
     $client = new MobibaseVodClient($api_key);
 
-    $service = $client->geVideo($video_id);
+    $service = $client->getVideo($video_id);
 
     $video = $service->response->video; // video object
 
@@ -207,31 +230,111 @@ Request with a network defined to get a stream URL for the current device.
 
     $client = new MobibaseVodClient($api_key);
 
-    $service = $client->geVideo($video_id, 'wifi');
+    $service = $client->getVideo($video_id, $ticket, 'wifi');
 
     $video = $service->response->video; // video object
     $sream = $service->response->sream; // stream object
+
+### getTicketProfiles()
+
+Returns the list of all available ticket profiles attached to the service defined by the API key.
+
+    $client->getTicketProfiles();
+
+#### Example
+
+    $client = new MobibaseVodClient($api_key);
+
+    $service = $client->getTicketProfiles();
+
+    $profiles = $service->response->profiles; // array of ticket profiles objects
+
+### getTicketProfile( {TICKET_PROFILE_ID} )
+
+Returns a specific Profile information.
+
+    $client->getTicketProfile($ticket_profile_id);
+
+#### Example
+
+    $client = new MobibaseVodClient($api_key);
+
+    $service = $client->getTicketProfile($ticket_profile_id);
+
+    $profile = $service->response->profile; // ticket profile object
+
+### createTicket( {TICKET_PROFILE_ID} )
+
+Creates a new Ticket from a Ticket Profile ID
+
+    $client->createTicket($ticket_profile_id);
+
+#### Examples
+
+    $client = new MobibaseVodClient($api_key);
+
+    $service = $client->createTicket($ticket_profile_id);
+
+    $ticket  = $service->response->ticket;  // ticket object
+    $profile = $service->response->profile; // ticket profile object
+
+### isTicketValid( {TICKET} )
+
+Returns information about a ticket and its current validity.
+
+    $client->isTicketValid($ticket);
+
+#### Examples
+
+    $client = new MobibaseVodClient($api_key);
+
+    $service = $client->isTicketValid($ticket);
+
+    $validity = $service->response->validity->status;
+
+    if ($validity->status) {
+        echo "This ticket is valid.";
+    } else {
+        echo "This ticket is NOT valid.";
+    }
+
+### invalidateTicket( {TICKET} )
+
+Invalidate the current validity of a Ticket. 
+
+    $client->invalidateTicket($ticket);
+
+#### Examples
+
+    $client = new MobibaseVodClient($api_key);
+
+    $service = $client->invalidateTicket($ticket);
+
+    $validity = $service->response->validity->status;
 
 ### setUserAgent( {USER_AGENT} )
 
 Overides User Agent of the current device for the further requests.
 
-    $service = $client->setUserAgent($_SERVER['HTTP_USER_AGENT']);
+    $client->setUserAgent($_SERVER['HTTP_USER_AGENT']);
 
-### isDeviceCompatible( [ USER_AGENT ] )
+### getUserAgent()
 
-Returns information about the streaming compatibility of a device.
+Returns the User Agent defined for all requests.
 
-By defaut the SDK runs the compatibility check with the current device, excepted if another one has been set by setUserAgent(). 
-Another User Agent can be given to check compatibility of a different device.
-
-    $service = $client->isDeviceCompatible($_SERVER['HTTP_USER_AGENT']);
+    $user_agent = $client->getUserAgent();
 
 ### getLastRequest()
 
 Returns the last request sent to the service.
 
     $request = $client->getLastRequest();
+
+### getLastPostedData()
+
+Returns the last posted data to the service.
+
+    $posted_data = $client->getLastPostedData();
 
 ### getLastResponse()
 
@@ -257,3 +360,4 @@ Best practice for error management.
     } catch(Exception $e) {
         die($e->getMessage());
     }
+

@@ -30,6 +30,23 @@ h3 {
     margin: 10px 0;
 }
 
+div.status { 
+    padding: 30px;
+    text-align: center;
+    color: white;
+    font-size: 160%;
+}
+    .compatible.status {
+        background: green;
+    }
+    .player-required.status {
+        background: orange;
+    }
+    .unkown.status,
+    .not-compatible.status {
+        background: red;
+    }
+
 #packages {
     margin: 20px 0;
     padding: 0;
@@ -84,23 +101,6 @@ h3 {
         #pagination li.current {
             border: 1px solid white;
         }
-
-#compatibility div { 
-    padding: 30px;
-    text-align: center;
-    color: white;
-    font-size: 160%;
-}
-    #compatibility .compatible {
-        background: green;
-    }
-    #compatibility .player-required {
-        background: orange;
-    }
-    #compatibility .unkown,
-    #compatibility .not-compatible {
-        background: red;
-    }
 
 #error {
     background: red;

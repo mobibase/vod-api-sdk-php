@@ -18,7 +18,6 @@
 
         <!-- Everything is ok -->
         <?php else: ?>
-            <div id="compatibility">
             <h2>Device compatibility</h2>
             <p>Is the device compatible with the service.</p>
             
@@ -41,8 +40,7 @@
                         $class = 'unknown';
                 }
             ?>
-            <div class="<?php echo $class ?>"><?php echo $message ?></div>
-            </div>
+            <div class="status <?php echo $class ?>"><?php echo $message ?></div>
         <?php endif ?>
 
         <!-- Display response -->
@@ -50,7 +48,7 @@
         <div id="trace">
             <a id="toggle-debug" href="#">Show trace</a>
             <div>
-                <h4>Request</h4>
+                <h4>GET</h4>
                 <pre><?php print_r($client->getLastRequest()); ?></pre>
 
                 <h4>Response</h4>

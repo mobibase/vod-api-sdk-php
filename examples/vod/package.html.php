@@ -18,18 +18,18 @@
 
         <!-- Everything is ok -->
         <?php else : ?>
-            <h2>All videos <span><?php echo $service->response->contents ?> videos</span></h2>
-
+            <h2><?php echo $package->name ?> <span><?php echo $package->contents ?> videos</span></h2>
+            
             <p><a href="javascript:history.go(-1)">Back</a></p>
 
             <ul id="videos">
-            <?php foreach ($videos as $video): ?>
+            <?php foreach ($package->videos as $video): ?>
                 <li>
                     <a href="video.php?id=<?php echo $video->id ?>">
                         <img src="<?php echo $video->preview ?>">
                         <h3><?php echo $video->name ?></h3>
                     </a>
-                    <p><a href="package.php?id=<?php echo $video->package->id; ?>"><?php echo $video->package->name; ?></a> &mdash; <?php echo gmdate('H:i:s', $video->duration); ?></p>
+                    <p><?php echo gmdate('H:i:s', $video->duration) ?></p>
                 </li>
             <?php endforeach ?>
             </ul>
@@ -39,7 +39,7 @@
                 <?php if ($i == $page) : ?>
                 <li class="current"><?php echo $i ?></li>
                 <?php else: ?>
-                <li><a href="?page=<?php echo $i ?>"><?php echo $i ?></a></li>
+                <li><a href="?id=<?php echo $package->id ?>&page=<?php echo $i ?>"><?php echo $i ?></a></li>
                 <?php endif ?>
             <?php endfor ?>
             </ul>
@@ -50,7 +50,7 @@
         <div id="trace">
             <a id="toggle-debug" href="#">Show trace</a>
             <div>
-                <h4>Request</h4>
+                <h4>GET</h4>
                 <pre><?php print_r($client->getLastRequest()); ?></pre>
 
                 <h4>Response</h4>

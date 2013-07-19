@@ -1,7 +1,7 @@
 Mobibase VOD Service example
 ============================
 
-Example of a fake VOD application build over the Mobibase VOD API.
+Example of a demo VOD backoffice build over the Mobibase VOD API.
 
 Getting started
 ---------------

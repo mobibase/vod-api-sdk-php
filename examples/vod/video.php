@@ -1,6 +1,6 @@
 <?php
-    include_once "settings.php";
-    include_once "../mobibase/MobibaseVodClient.php";
+    include_once "../settings.php";
+    include_once "../../mobibase/MobibaseVodClient.php";
 
     if (isset($_GET['id'])) {
         $id = $_GET['id'];
@@ -9,11 +9,12 @@
     }
 
     try {
-        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+        $user_agent  = $_SERVER['HTTP_USER_AGENT'];
+        $user_ticket = $settings['ticket'];
 
         $client = new MobibaseVodClient($settings['apikey']);
 
-        $service = $client->getVideo($id, 'WIFI', $user_agent);
+        $service = $client->getVideo($id, $user_ticket, 'WIFI', $user_agent);
 
         if ($service->status == 'OK') {
             $video  = $service->response->video;

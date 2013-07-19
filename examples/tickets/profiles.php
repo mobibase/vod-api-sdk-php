@@ -1,13 +1,13 @@
 <?php
-    include_once "settings.php";
-    include_once "../mobibase/MobibaseVodClient.php";
+    include_once "../settings.php";
+    include_once "../../mobibase/MobibaseVodClient.php";
 
     try {
         $client = new MobibaseVodClient($settings['apikey']);
-        $service = $client->getPackages();
+        $service = $client->getTicketProfiles();
 
         if ($service->status == 'OK') {
-            $packages = $service->response->packages;
+            $profiles = $service->response->profiles;
         } else {
             $error = $service->response->error->message;
         }
@@ -15,4 +15,4 @@
         $error = $e->getMessage();
     }
 
-    include "packages.html.php";
+    include "profiles.html.php";

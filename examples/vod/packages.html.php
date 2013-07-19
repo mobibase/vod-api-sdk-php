@@ -40,7 +40,7 @@
         <div id="trace">
             <a id="toggle-debug" href="#">Show trace</a>
             <div>
-                <h4>Request</h4>
+                <h4>GET</h4>
                 <pre><?php print_r($client->getLastRequest()); ?></pre>
 
                 <h4>Response</h4>
