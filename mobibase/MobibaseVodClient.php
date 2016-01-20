@@ -73,7 +73,7 @@
 
         public function getVideo($id, $ticket = null, $network = null, $ua = null) {
             if ($this->cdn === true) {
-                return getVideoCDN($id);
+                return $this->getVideoCDN($id);
             }
             
             if ($ticket) {
