@@ -15,11 +15,15 @@ Instanciate the client class with your Mobibase VOD API key.
 Methods
 -------
 
+### enableCdn()
+
+Enable CDN support.
+
 ### isDeviceCompatible( [ USER_AGENT ] )
 
 Returns information about the streaming compatibility of a device.
 
-By defaut the SDK runs the compatibility check with the current device, excepted if another one has been set by setUserAgent(). 
+By default the SDK runs the compatibility check with the current device, excepted if another one has been set by setUserAgent(). 
 Another User Agent can be given to check compatibility of a different device.
 
     $client->isDeviceCompatible($_SERVER['HTTP_USER_AGENT']);

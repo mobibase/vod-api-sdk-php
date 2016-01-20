@@ -24,6 +24,7 @@
         private $last_posted_data = null;
         private $last_response = null;
         private $ua = null;
+        private $cdn = false;
 
         public function __construct($api_key = null) {
             $this->setApiKey($api_key);
@@ -46,6 +47,18 @@
             return $this->service_url;
         }
 
+        public function enableCdn() {
+            $this->cdn = true;
+        }
+
+        public function disableCdn() {
+            $this->cdn = false;
+        }
+
+        public function getCdn() {
+            return $this->cdn;
+        }        
+
         public function getPackages($options = array()) {
             return $this->service('packages/', $options);
         }
@@ -59,6 +72,10 @@
         }
 
         public function getVideo($id, $ticket = null, $network = null, $ua = null) {
+            if ($this->cdn === true) {
+                return getVideoCDN($id);
+            }
+            
             if ($ticket) {
                 $params['ticket'] = $ticket;
             } else {
@@ -76,7 +93,13 @@
             }
 
             return $this->service('videos/' . $id . $network . $ua, $params);
+
         }
+
+        public function getVideoCDN($id) {
+            return $this->service('videos/' . $id);
+        }        
+
 
         public function createTicket($profile_id, $tracking_id = null) {
             $posted = array(
