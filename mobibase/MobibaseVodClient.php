@@ -72,16 +72,16 @@
         }
 
         public function getVideo($id, $ticket = null, $network = null, $ua = null) {
-            if ($this->cdn === true) {
-                return $this->getVideoCDN($id);
-            }
-            
             if ($ticket) {
                 $params['ticket'] = $ticket;
             } else {
                 $params = array();
             }
 
+            if ($this->cdn === true) {
+                return $this->getVideoCDN($id, $ticket);
+            }
+            
             if ($network) {
                 $network = '/' . strtolower($network);
             
@@ -96,8 +96,14 @@
 
         }
 
-        public function getVideoCDN($id) {
-            return $this->service('videos/' . $id);
+        public function getVideoCDN($id, $ticket) {
+            if ($ticket) {
+                $params['ticket'] = $ticket;
+            } else {
+                $params = array();
+            }
+
+            return $this->service('videos/cdn/' . $id, $params);
         }        
 
 
@@ -179,7 +185,16 @@
                 throw new MobibaseVodExecption(__METHOD__ . ': Bad URL or Server unavailable.');   
             }
 
-            return json_decode($response);
+            $json = json_decode($response);
+
+            if (strrpos($action, 'videos/cdn') !== false && isset($json->response->stream) !== false) {
+                $json->response->stream = (object) array(
+                    'url' => $json->response->stream,
+                    'streamer' => null
+                );
+             }
+
+            return $json;
         }
 
         private function curl($url, $posted = array()) {
