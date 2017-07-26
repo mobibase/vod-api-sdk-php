@@ -96,15 +96,21 @@
 
         }
 
-        public function getVideoCDN($id, $ticket) {
+        public function getVideoCDN($id, $ticket, $ua = null) {
             if ($ticket) {
                 $params['ticket'] = $ticket;
             } else {
                 $params = array();
             }
 
-            return $this->service('videos/cdn/' . $id, $params);
-        }        
+            if (null !== $ua) {
+                $ua = '/' . base64_encode($ua);
+            } else if ($this->ua) {
+                $ua = '/' . base64_encode($this->ua);
+            }
+
+            return $this->service('videos/cdn/' . $id . $ua, $params);
+        }
 
 
         public function createTicket($profile_id, $tracking_id = null) {
